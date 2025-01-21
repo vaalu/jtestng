@@ -1,12 +1,13 @@
 /**
  * 
  */
-package in.jeani.jtestng.automation.simple;
+package com.icw.automation.mobile.simple;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import in.jeani.jtestng.automation.generics.impl.AbstractTestSuite;
+import com.icw.automation.mobile.generics.impl.AbstractTestSuite;
+import com.icw.automation.mobile.generics.util.WorkflowUtil;
 
 /**
  * 
@@ -16,6 +17,9 @@ public class SimpleTestSuite extends AbstractTestSuite {
 
 	@Autowired
 	SimpleWorkflow simpleWorkflow;
+	
+	@Autowired
+	WorkflowUtil workflowUtil;
 	
 	@Override
 	public String getName() {
@@ -28,6 +32,9 @@ public class SimpleTestSuite extends AbstractTestSuite {
 	}
 
 	public void init() {
+		
+		simpleWorkflow.init();
+		
 		this.addWorkflow(simpleWorkflow);
 	}
 }

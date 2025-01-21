@@ -1,12 +1,12 @@
 /**
  * 
  */
-package in.jeani.jtestng.automation.generics.impl;
+package com.icw.automation.mobile.generics.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import in.jeani.jtestng.automation.generics.ITestStep;
+import com.icw.automation.mobile.generics.ITestStep;
 
 /**
  * 
@@ -14,10 +14,13 @@ import in.jeani.jtestng.automation.generics.ITestStep;
 public abstract class AbstractTestStep implements ITestStep {
 	public static final Logger LOGGER = LoggerFactory.getLogger(AbstractTestStep.class);
 	
+	private String workflow;
 	private String identifier;
 	private String idType;
 	private String action;
 	private String value;
+	private String expected;
+	private String comments;
 	
 	/**
 	 * @return the identifier
@@ -83,5 +86,47 @@ public abstract class AbstractTestStep implements ITestStep {
 		sb.append(" : action : ").append(action);
 		sb.append(" : value : ").append(value);
 		return sb.toString();
+	}
+
+	/**
+	 * @return the workflow
+	 */
+	public String getWorkflow() {
+		return workflow;
+	}
+
+	/**
+	 * @param workflow the workflow to set
+	 */
+	public void setWorkflow(String workflow) {
+		this.workflow = workflow;
+	}
+
+	/**
+	 * @return the expected
+	 */
+	public String getExpected() {
+		return expected;
+	}
+
+	/**
+	 * @param expected the expected to set
+	 */
+	public void setExpected(String expected) {
+		this.expected = expected;
+	}
+
+	/**
+	 * @return the comments
+	 */
+	public String getComments() {
+		return comments;
+	}
+
+	/**
+	 * @param comments the comments to set
+	 */
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 }

@@ -1,9 +1,9 @@
 /**
  * 
  */
-package in.jeani.jtestng.automation.simple.steps;
+package com.icw.automation.mobile.simple.steps;
 
-import in.jeani.jtestng.automation.generics.impl.AbstractTestStep;
+import com.icw.automation.mobile.generics.impl.AbstractTestStep;
 
 /**
  * 
@@ -20,9 +20,5 @@ public class SimpleStep extends AbstractTestStep {
 	}
 	@Override
 	public void init() {
-	}
-	@Override
-	public void test() {
-		LOGGER.debug("Testing step: ", this.toString());
 	}
 }

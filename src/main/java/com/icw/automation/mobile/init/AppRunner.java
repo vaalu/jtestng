@@ -1,4 +1,4 @@
-package in.jeani.jtestng.automation.init;
+package com.icw.automation.mobile.init;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +10,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import in.jeani.jtestng.automation.generics.ITestSuite;
-import in.jeani.jtestng.automation.simple.SimpleTestSuite;
+import com.icw.automation.mobile.generics.ITestSuite;
+import com.icw.automation.mobile.simple.SimpleTestSuite;
 
 @Component
-@ComponentScan(basePackages = "in.jeani.jtestng")
+@ComponentScan(basePackages = "com.icw.automation")
 public class AppRunner implements CommandLineRunner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppRunner.class);

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package in.jeani.jtestng.automation.generics;
+package com.icw.automation.mobile.generics;
 
 /**
  * 
