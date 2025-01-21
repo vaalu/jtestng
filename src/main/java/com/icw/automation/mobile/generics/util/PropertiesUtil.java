@@ -46,6 +46,12 @@ public class PropertiesUtil {
 	@Value("${com.icw.android.url}")
 	private String androidUrl;
 	
+	@Value("${com.icw.delete.loan.url}")
+	private String deleteLoanUrl;
+	
+	@Value("${com.icw.delete.loan.payload}")
+	private String deleteLoanPayload;
+	
 	@Value("${com.icw.webdriver.wait.seconds}")
 	private String webDriverWaitSeconds;
 	
@@ -222,5 +228,33 @@ public class PropertiesUtil {
 	 */
 	public void setUploadDocsUrl(String uploadDocsUrl) {
 		this.uploadDocsUrl = uploadDocsUrl;
+	}
+
+	/**
+	 * @return the deleteLoanUrl
+	 */
+	public String getDeleteLoanUrl() {
+		return deleteLoanUrl;
+	}
+
+	/**
+	 * @param deleteLoanUrl the deleteLoanUrl to set
+	 */
+	public void setDeleteLoanUrl(String deleteLoanUrl) {
+		this.deleteLoanUrl = deleteLoanUrl;
+	}
+
+	/**
+	 * @return the deleteLoanPayload
+	 */
+	public String getDeleteLoanPayload() {
+		return deleteLoanPayload;
+	}
+
+	/**
+	 * @param deleteLoanPayload the deleteLoanPayload to set
+	 */
+	public void setDeleteLoanPayload(String deleteLoanPayload) {
+		this.deleteLoanPayload = deleteLoanPayload;
 	}
 }
