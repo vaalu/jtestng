@@ -3,7 +3,8 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
     <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
-    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}-testng.log}" />
+    <property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}" />
+    <property name="LOG_FILE" value="${LOG_FILE:-testing-msgs.log}" />
     <root level="INFO">
     	<appender-ref ref="CONSOLE" />
     	<appender-ref ref="FILE" />

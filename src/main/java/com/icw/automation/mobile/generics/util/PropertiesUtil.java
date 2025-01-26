@@ -55,6 +55,15 @@ public class PropertiesUtil {
 	@Value("${com.icw.webdriver.wait.seconds}")
 	private String webDriverWaitSeconds;
 	
+	@Value("${com.icw.access.token.payload.ios}")
+	private String accessTokenPayloadIOS;
+	
+	@Value("${com.icw.auth.login.url}")
+	private String loginUrl;
+	
+	@Value("${com.icw.auth.login.payload}")
+	private String loginPayload;
+	
 	/**
 	 * @return the authUrl
 	 */
@@ -256,5 +265,47 @@ public class PropertiesUtil {
 	 */
 	public void setDeleteLoanPayload(String deleteLoanPayload) {
 		this.deleteLoanPayload = deleteLoanPayload;
+	}
+
+	/**
+	 * @return the accessTokenPayloadIOS
+	 */
+	public String getAccessTokenPayloadIOS() {
+		return accessTokenPayloadIOS;
+	}
+
+	/**
+	 * @param accessTokenPayloadIOS the accessTokenPayloadIOS to set
+	 */
+	public void setAccessTokenPayloadIOS(String accessTokenPayloadIOS) {
+		this.accessTokenPayloadIOS = accessTokenPayloadIOS;
+	}
+
+	/**
+	 * @return the loginUrl
+	 */
+	public String getLoginUrl() {
+		return loginUrl;
+	}
+
+	/**
+	 * @param loginUrl the loginUrl to set
+	 */
+	public void setLoginUrl(String loginUrl) {
+		this.loginUrl = loginUrl;
+	}
+
+	/**
+	 * @return the loginPayload
+	 */
+	public String getLoginPayload() {
+		return loginPayload;
+	}
+
+	/**
+	 * @param loginPayload the loginPayload to set
+	 */
+	public void setLoginPayload(String loginPayload) {
+		this.loginPayload = loginPayload;
 	}
 }

@@ -32,9 +32,10 @@ public class SimpleTestSuite extends AbstractTestSuite {
 	}
 
 	public void init() {
-		
+		super.init();
+		simpleWorkflow.setReporting(getReporting());
+		simpleWorkflow.setGeneratedEmail(getGeneratedEmail());
 		simpleWorkflow.init();
-		
 		this.addWorkflow(simpleWorkflow);
 	}
 }

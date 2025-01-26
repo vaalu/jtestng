@@ -3,17 +3,14 @@
  */
 package com.icw.automation.mobile.generics.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
@@ -34,8 +31,34 @@ public class WorkflowUtil {
 	
 	public String getAccessToken() {
 		String authUrl = props.getAuthUrl();
+		String accessToken = "";
 		LOGGER.debug("Fetching access token from url: {}", authUrl);
-		return null;
+		String deletePayload = props.getAccessTokenPayloadIOS();
+		
+		try (CloseableHttpClient client = HttpClients.createDefault()) {
+			HttpPost postReq = new HttpPost(authUrl);
+			postReq.setEntity(new StringEntity(deletePayload));
+			postReq.setHeader("Content-Type", "application/json");
+			
+			try (CloseableHttpResponse response = client.execute(postReq)) {
+				LOGGER.info("File upload status: {}",response.getCode());
+				String responseBody = EntityUtils.toString(response.getEntity());
+				LOGGER.info("File upload response: {}", responseBody);
+				if (response.getCode() == 200 || response.getCode() == 204) {
+					LOGGER.info("Loan deleted successfully: {}", responseBody);
+					accessToken = responseBody.substring(responseBody.indexOf("accessToken\":\"") + 14, 
+							responseBody.indexOf("\"", responseBody.indexOf("accessToken\":\"") + 14));
+				} else {
+					LOGGER.error("Unable to delete loan. {}", responseBody);
+				}
+			} catch (ParseException e) {
+				LOGGER.error("Error occurred while deleting loan.", e);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return accessToken;
 	}
 	
 	public String generateRandomEmail() {
@@ -59,7 +82,7 @@ public class WorkflowUtil {
 			HttpDelete postReq = new HttpDelete(deleteLoanUrl);
 			postReq.setEntity(new StringEntity(deletePayload));
 			postReq.setHeader("Content-Type", "application/json");
-			postReq.setHeader("Content-Type", "Bearer " + accessToken);
+			postReq.setHeader("Authorization", "Bearer " + accessToken);
 			
 			try (CloseableHttpResponse response = client.execute(postReq)) {
 				LOGGER.info("File upload status: {}",response.getCode());
@@ -86,4 +109,40 @@ public class WorkflowUtil {
 		
 	}
 	
+	public String login(String email, String accessToken) {
+		// ***@***.*** to be replaced with passed email address
+		String loginPayload = props.getLoginPayload();
+		loginPayload = loginPayload.replace("***@***.***", email);
+		
+		String authUrl = props.getLoginUrl();
+		String userToken = "";
+		LOGGER.debug("Fetching access token from url: {} with payload {}", authUrl, loginPayload);
+		String deletePayload = props.getAccessTokenPayloadIOS();
+		
+		try (CloseableHttpClient client = HttpClients.createDefault()) {
+			HttpPost postReq = new HttpPost(authUrl);
+			postReq.setEntity(new StringEntity(deletePayload));
+			postReq.setHeader("Content-Type", "application/json");
+			postReq.setHeader("Authorization", "Bearer " + accessToken);
+			
+			try (CloseableHttpResponse response = client.execute(postReq)) {
+				LOGGER.info("File upload status: {}",response.getCode());
+				String responseBody = EntityUtils.toString(response.getEntity());
+				LOGGER.info("File upload response: {}", responseBody);
+				if (response.getCode() == 200 || response.getCode() == 204) {
+					LOGGER.info("Loan deleted successfully: {}", responseBody);
+					accessToken = responseBody.substring(responseBody.indexOf("accessToken\":\"") + 14, 
+							responseBody.indexOf("\"", responseBody.indexOf("accessToken\":\"") + 14));
+				} else {
+					LOGGER.error("Unable to delete loan. {}", responseBody);
+				}
+			} catch (ParseException e) {
+				LOGGER.error("Error occurred while deleting loan.", e);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return userToken;
+	}
 }

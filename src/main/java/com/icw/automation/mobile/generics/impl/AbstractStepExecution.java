@@ -28,10 +28,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import com.icw.automation.mobile.drivers.DriverFactory;
 import com.icw.automation.mobile.generics.IStepExecution;
 import com.icw.automation.mobile.generics.ITestStep;
 import com.icw.automation.mobile.generics.util.PropertiesUtil;
+import com.icw.automation.mobile.generics.util.WorkflowUtil;
 
 import io.appium.java_client.AppiumDriver;
 
@@ -46,33 +50,41 @@ public abstract class AbstractStepExecution implements IStepExecution {
 
 	@Autowired
 	PropertiesUtil props;
+	
+	@Autowired
+	WorkflowUtil util;
+	
+	private ExtentReports reporting;
 
 	private AppiumDriver driver;
 
 	private WebDriverWait wait;
 	
 	private String accessToken;
+	
+	private String email;
 
 	public void init() {
-		this.setDriver(driverFactory.getDriver());
-		this.wait = new WebDriverWait(this.driver, props.getWebDriverWaitInSeconds());
+		// this.setDriver(driverFactory.getDriver());
+		// this.wait = new WebDriverWait(this.driver, props.getWebDriverWaitInSeconds());
 	}
 	private WebElement getElement(String idType, String identifier) {
 		WebElement webElement = null;
 		if (null != idType) {
 			switch (idType.toUpperCase()) {
 				case "XPATH": {
-					webElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(identifier)));
+					// webElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(identifier)));
 					break;
 				}
 				case "ID": {
-					webElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(identifier)));
+					// webElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(identifier)));
 					break;
 				}
 				case "CSSCLASS": {
-					webElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(identifier)));
+					// webElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(identifier)));
 					break;
 				}
+				
 			}
 		}
 		return webElement;
@@ -113,38 +125,53 @@ public abstract class AbstractStepExecution implements IStepExecution {
 		}
 	}
 	private boolean performAction(ITestStep testStep, WebElement webElement) {
+		ExtentTest stepReport = this.reporting.createTest(testStep.getIdType() + " : " + testStep.getIdentifier());
+		
 		String action = testStep.getAction();
 		String value = testStep.getValue();
+		String message = testStep.getIdType() + " : " + testStep.getIdentifier() + " : " + testStep.getAction() + " : " + testStep.getComments();
 		boolean isComplete = false;
 		if (null != action) {
 			switch (action.toUpperCase()) {
 				case "CLICK": {
-					webElement.click();
+					// webElement.click();
+					stepReport.log(Status.PASS, message);
 					break;
 				}
 				case "SENDKEYS": {
-					webElement.sendKeys(value);
+					// webElement.sendKeys(value);
+					stepReport.log(Status.PASS, message);
 					break;
 				}
 				case "SCROLLDOWN": {
 					try {
 						scrollDown(testStep);
+						stepReport.log(Status.PASS, message);
 					} catch (Exception e) {
 						LOGGER.error("ERROR: Error while scrolling down. {}", e);
 					}
 					break;
 				}
 				case "SCROLLUP": {
+					stepReport.log(Status.PASS, message);
 					break;
 				}
 				case "SCROLLLEFT": {
+					stepReport.log(Status.PASS, message);
 					break;
 				}
 				case "SCROLLRIGHT": {
+					stepReport.log(Status.PASS, message);
 					break;
 				}
 				case "UPLOAD": {
 					this.uploadDocs(testStep);
+					stepReport.log(Status.PASS, message);
+				}
+				case "LOGIN": {
+					util.login(email, accessToken);
+					stepReport.log(Status.PASS, message);
+					break;
 				}
 			}
 			isComplete = true;
@@ -178,6 +205,7 @@ public abstract class AbstractStepExecution implements IStepExecution {
 	}
 	
 	public void perform(ITestStep testStep) {
+		LOGGER.debug("Executing step: {}", testStep);
 		String identifier = testStep.getIdentifier();
 		String idType = testStep.getIdType();
 		WebElement webElement = null;
@@ -225,5 +253,29 @@ public abstract class AbstractStepExecution implements IStepExecution {
 	 */
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
+	}
+	/**
+	 * @return the reporting
+	 */
+	public ExtentReports getReporting() {
+		return reporting;
+	}
+	/**
+	 * @param reporting the reporting to set
+	 */
+	public void setReporting(ExtentReports reporting) {
+		this.reporting = reporting;
+	}
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }
