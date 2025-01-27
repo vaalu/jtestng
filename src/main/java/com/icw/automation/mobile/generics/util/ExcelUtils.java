@@ -56,21 +56,24 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ExcelUtils.class);
 								test.setWorkflow(cellValue);
 								break;
 							case 1:
-								test.setIdType(cellValue);
+								test.setStepTitle(cellValue);
 								break;
 							case 2:
-								test.setIdentifier(cellValue);
+								test.setIdType(cellValue);
 								break;
 							case 3:
-								test.setValue(cellValue);
+								test.setIdentifier(cellValue);
 								break;
 							case 4:
-								test.setAction(cellValue);
+								test.setValue(cellValue);
 								break;
 							case 5:
-								test.setExpected(cellValue);
+								test.setAction(cellValue);
 								break;
 							case 6:
+								test.setExpected(cellValue);
+								break;
+							case 7:
 								test.setComments(cellValue);
 								break;
 							}

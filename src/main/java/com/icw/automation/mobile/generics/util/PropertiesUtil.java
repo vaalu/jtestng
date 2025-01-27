@@ -21,7 +21,22 @@ public class PropertiesUtil {
 	
 	@Value("${com.icw.upload.docs.url}")
 	private String uploadDocsUrl;
-
+	
+	@Value("${com.icw.mail.smtp.host}")
+	private String smtpHost;
+	
+	@Value("${com.icw.mail.smtp.port}")
+	private String smtpPort;
+	
+	@Value("${com.icw.mail.username}")
+	private String username;
+	
+	@Value("${com.icw.mail.sendTo}")
+	private String sendMailTo;
+	
+	@Value("${com.icw.mail.password}")
+	private String password;
+	
 	@Value("${com.icw.driver.type}")
 	private String driverType;
 	
@@ -307,5 +322,86 @@ public class PropertiesUtil {
 	 */
 	public void setLoginPayload(String loginPayload) {
 		this.loginPayload = loginPayload;
+	}
+
+	/**
+	 * @return the mailHost
+	 */
+	public String getSmtpHost() {
+		return smtpHost;
+	}
+
+	/**
+	 * @param mailHost the mailHost to set
+	 */
+	public void setSmtpHost(String mailHost) {
+		this.smtpHost = mailHost;
+	}
+
+	/**
+	 * @return the mailPort
+	 */
+	public String getSmtpPort() {
+		return smtpPort;
+	}
+	
+	/**
+	 * @return the mailPortNum
+	 */
+	public int getSmtpPortNumber() {
+		return Integer.parseInt(this.getSmtpPort());
+	}
+
+	/**
+	 * @param mailPort the mailPort to set
+	 */
+	public void setSmtpPort(String mailPort) {
+		this.smtpPort = mailPort;
+	}
+
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @return the sendMailTo
+	 */
+	public String getSendMailTo() {
+		return sendMailTo;
+	}
+	
+	public String[] getSentMailToRecipients() {
+		return this.sendMailTo.split(",");
+	}
+
+	/**
+	 * @param sendMailTo the sendMailTo to set
+	 */
+	public void setSendMailTo(String sendMailTo) {
+		this.sendMailTo = sendMailTo;
 	}
 }

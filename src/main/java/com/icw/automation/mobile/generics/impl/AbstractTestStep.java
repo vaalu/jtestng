@@ -15,6 +15,7 @@ public abstract class AbstractTestStep implements ITestStep {
 	public static final Logger LOGGER = LoggerFactory.getLogger(AbstractTestStep.class);
 	
 	private String workflow;
+	private String stepTitle;
 	private String identifier;
 	private String idType;
 	private String action;
@@ -128,5 +129,19 @@ public abstract class AbstractTestStep implements ITestStep {
 	 */
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	/**
+	 * @return the stepTitle
+	 */
+	public String getStepTitle() {
+		return stepTitle;
+	}
+
+	/**
+	 * @param stepTitle the stepTitle to set
+	 */
+	public void setStepTitle(String stepTitle) {
+		this.stepTitle = stepTitle;
 	}
 }

@@ -10,13 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
 import com.icw.automation.mobile.generics.IStepExecution;
 import com.icw.automation.mobile.generics.ITestStep;
 import com.icw.automation.mobile.generics.IWorkflow;
 import com.icw.automation.mobile.generics.impl.defaults.DefaultStepExecution;
 import com.icw.automation.mobile.generics.util.ExcelUtils;
+import com.icw.automation.mobile.generics.util.ReportingUtil;
 import com.icw.automation.mobile.generics.util.WorkflowUtil;
 
 /**
@@ -35,6 +35,9 @@ public abstract class AbstractWorkflow implements IWorkflow {
 	@Autowired
 	DefaultStepExecution stepExecution;
 	
+	@Autowired
+	ReportingUtil reporting;
+	
 	private IStepExecution stepExecutor;
 	
 	private String generatedEmail;
@@ -42,11 +45,13 @@ public abstract class AbstractWorkflow implements IWorkflow {
 	
 	private List<ITestStep> steps = new ArrayList<>();
 	
-	private ExtentReports reporting;
-	
 	private void logStatusCheckNotEmpty(String topic, String message) {
 		Status stat = null != topic ? topic.length() > 0 ? Status.PASS : Status.FAIL: Status.FAIL;
-		reporting.createTest(topic).log(stat, message);
+		if (stat == Status.PASS) {
+			reporting.logSuccess(topic, message);
+		} else {
+			reporting.logFail(topic, message);
+		}
 	}
 	
 	@Override
@@ -55,11 +60,9 @@ public abstract class AbstractWorkflow implements IWorkflow {
 		LOGGER.debug("Access Token: {} : {}", this.generatedEmail, this.accessToken);
 		logStatusCheckNotEmpty("Generate Access Token", accessToken);
 		stepExecution.setAccessToken(this.accessToken);
-		stepExecution.setReporting(this.reporting);
 		stepExecution.setEmail(this.generatedEmail);
 		stepExecution.init();
 		this.setStepExecutor(stepExecution);
-		this.reporting.flush();
 	}
 	
 	@Override
@@ -124,19 +127,4 @@ public abstract class AbstractWorkflow implements IWorkflow {
 	public void setSteps(List<ITestStep> steps) {
 		this.steps = steps;
 	}
-
-	/**
-	 * @return the reporting
-	 */
-	public ExtentReports getReporting() {
-		return reporting;
-	}
-
-	/**
-	 * @param reporting the reporting to set
-	 */
-	public void setReporting(ExtentReports reporting) {
-		this.reporting = reporting;
-	}
-	
 }

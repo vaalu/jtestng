@@ -3,8 +3,6 @@
  */
 package com.icw.automation.mobile.generics;
 
-import com.aventstack.extentreports.ExtentReports;
-
 /**
  * 
  */
@@ -29,12 +27,4 @@ public interface IWorkflow {
 	 * @param accessToken the accessToken to set
 	 */
 	void setAccessToken(String accessToken);
-	/**
-	 * @return the reporting
-	 */
-	public ExtentReports getReporting();
-	/**
-	 * @param reporting the reporting to set
-	 */
-	public void setReporting(ExtentReports reporting);
 }

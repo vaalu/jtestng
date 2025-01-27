@@ -44,4 +44,14 @@ public interface ITestStep {
 	 * @return the comments
 	 */
 	public String getComments();
+	
+	/**
+	 * @return the stepTitle
+	 */
+	public String getStepTitle();
+
+	/**
+	 * @param stepTitle the stepTitle to set
+	 */
+	public void setStepTitle(String stepTitle);
 }

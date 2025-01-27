@@ -3,8 +3,24 @@
  */
 package com.icw.automation.mobile.generics.util;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.Random;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
@@ -26,14 +42,17 @@ import org.springframework.stereotype.Component;
 public class WorkflowUtil {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorkflowUtil.class);
+	
+	public static final String HTML_REPORT_FILE_PATH = "reports/test_results.html";
+	
 	@Autowired
-	PropertiesUtil props;
+	PropertiesUtil propsUtil;
 	
 	public String getAccessToken() {
-		String authUrl = props.getAuthUrl();
+		String authUrl = propsUtil.getAuthUrl();
 		String accessToken = "";
 		LOGGER.debug("Fetching access token from url: {}", authUrl);
-		String deletePayload = props.getAccessTokenPayloadIOS();
+		String deletePayload = propsUtil.getAccessTokenPayloadIOS();
 		
 		try (CloseableHttpClient client = HttpClients.createDefault()) {
 			HttpPost postReq = new HttpPost(authUrl);
@@ -75,8 +94,8 @@ public class WorkflowUtil {
 	
 	public void deleteLoan(String accessToken) {
 		
-		String deleteLoanUrl = props.getDeleteLoanUrl();
-		String deletePayload = props.getDeleteLoanPayload();
+		String deleteLoanUrl = propsUtil.getDeleteLoanUrl();
+		String deletePayload = propsUtil.getDeleteLoanPayload();
 		
 		try (CloseableHttpClient client = HttpClients.createDefault()) {
 			HttpDelete postReq = new HttpDelete(deleteLoanUrl);
@@ -111,13 +130,13 @@ public class WorkflowUtil {
 	
 	public String login(String email, String accessToken) {
 		// ***@***.*** to be replaced with passed email address
-		String loginPayload = props.getLoginPayload();
+		String loginPayload = propsUtil.getLoginPayload();
 		loginPayload = loginPayload.replace("***@***.***", email);
 		
-		String authUrl = props.getLoginUrl();
+		String authUrl = propsUtil.getLoginUrl();
 		String userToken = "";
 		LOGGER.debug("Fetching access token from url: {} with payload {}", authUrl, loginPayload);
-		String deletePayload = props.getAccessTokenPayloadIOS();
+		String deletePayload = propsUtil.getAccessTokenPayloadIOS();
 		
 		try (CloseableHttpClient client = HttpClients.createDefault()) {
 			HttpPost postReq = new HttpPost(authUrl);
@@ -144,5 +163,57 @@ public class WorkflowUtil {
 			e.printStackTrace();
 		}
 		return userToken;
+	}
+	public String getEmailContents() throws IOException {
+		String htmlContent = "";
+		
+		BufferedReader br = new BufferedReader(new FileReader(HTML_REPORT_FILE_PATH));
+		try {
+		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+
+		    while (line != null) {
+		        sb.append(line);
+		        sb.append(System.lineSeparator());
+		        line = br.readLine();
+		    }
+		    htmlContent = sb.toString();
+		} finally {
+		    br.close();
+		}
+		
+		return htmlContent;
+	}
+	public void sendEmail() throws AddressException, MessagingException, IOException {
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", true);
+		props.put("mail.smtp.host", this.propsUtil.getSmtpHost());
+		props.put("mail.smtp.port", this.propsUtil.getSmtpPort());
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.socketFactory.port", this.propsUtil.getSmtpPort());
+		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+	    
+		Session session = Session.getInstance(props, new Authenticator() {
+		    @Override
+		    protected PasswordAuthentication getPasswordAuthentication() {
+		        return new PasswordAuthentication(propsUtil.getUsername(), propsUtil.getPassword());
+		    }
+		});
+		
+		Message message = new MimeMessage(session);
+		message.setFrom(new InternetAddress("mohu_mca@yahoo.co.in"));
+		message.setRecipients(
+		  Message.RecipientType.TO, InternetAddress.parse(propsUtil.getSendMailTo()));
+		message.setSubject("Testing results");
+
+		String msg = this.getEmailContents();
+		
+		Multipart mp = new MimeMultipart();
+		MimeBodyPart htmlPart = new MimeBodyPart();
+		htmlPart.setContent(msg, "text/html");
+		mp.addBodyPart(htmlPart);
+		message.setContent(mp);
+
+		Transport.send(message);
 	}
 }
